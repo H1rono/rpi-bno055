@@ -1,10 +1,10 @@
 import smbus2
 
-from . import RegisterAddress
+from . import Mode, RegisterAddress
 
 
 class BNO055:
-    from . import constants, regaddrs0
+    from . import constants, modes, regaddrs0
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
@@ -19,15 +19,15 @@ class BNO055:
     def read_block(self, register: RegisterAddress, length: int) -> list[int]:
         return self._i2c.read_i2c_block_data(self._address, register, length)
 
-    def write_mode(self, mode: int) -> None:
+    def write_mode(self, mode: Mode) -> None:
         self.write_byte(BNO055.regaddrs0.OPR_MODE, mode)
 
-    def read_mode(self) -> int:
-        return self.read_byte(BNO055.regaddrs0.OPR_MODE)
+    def read_mode(self) -> Mode:
+        return Mode(self.read_byte(BNO055.regaddrs0.OPR_MODE))
 
     def begin(self) -> None:
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
-        self.write_mode(0x00)
+        self.write_mode(BNO055.modes.CONFIG)
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
 
     # (SW_REV_ID_MSB, SW_REV_ID_LSB)
