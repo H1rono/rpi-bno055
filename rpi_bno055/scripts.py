@@ -88,5 +88,25 @@ def calibration_check(
         sleep(0.1)
 
 
+def acconly(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
+    bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
+    bno055.begin()
+    bno055.system_trigger(BNO055.SysTriggerFlag.RST_SYS)
+    status = bno055.read_system_status_code()
+    if status == bno055.sys_status_codes.SYSTEM_ERROR:
+        err = bno055.read_system_error_code()
+        print(f"bno055 is in system error with code: {err}")
+        return
+    bno055.update_unit_selection(BNO055.UnitSelection.ACC_MPS2)
+    bno055.write_mode(BNO055.modes.ACCONLY)
+    while True:
+        try:
+            acc = bno055.read_accelerometer()
+            print(f"accelerometer value: {acc}")
+        except OSError:
+            print("waiting bno055 getting ready...")
+        sleep(1)
+
+
 if __name__ == "__main__":
     begin()

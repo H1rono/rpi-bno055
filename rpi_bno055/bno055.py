@@ -188,11 +188,12 @@ class BNO055:
 
     def system_trigger(self, trigger: SysTriggerFlag) -> None:
         from time import sleep
+
         self.write_byte(BNO055.regaddrs0.SYS_TRIGGER, trigger)
         # ensure triggering
         while True:
             try:
-                id =  self.read_byte(BNO055.regaddrs0.CHIP_ID)
+                id = self.read_byte(BNO055.regaddrs0.CHIP_ID)
                 if id == BNO055.constants.BNO055_CHIP_ID:
                     break
             except OSError:
@@ -201,3 +202,16 @@ class BNO055:
             # print("BNO055.system_trigger: waiting...")
             sleep(0.05)
         self.write_byte(BNO055.regaddrs0.SYS_TRIGGER, BNO055.SysTriggerFlag.NO_TRIGGER)
+
+    # (acc_x, acc_y, acc_z)
+    # section 3.6.4.1, table 3-17
+    def read_accelerometer(self) -> tuple[float, float, float]:
+        def parse_signed(v: int) -> int:
+            return int.from_bytes(bytes([(v >> 0) & 0xFF, (v >> 8) & 0xFF]), byteorder="little", signed=True)
+
+        raw_acc = self.read_raw_acc_data()
+        x, y, z = map(parse_signed, raw_acc)
+        unit_sel = self.read_unit_selection()
+        # 1 m/s^2 = 100 LSB, 1 mg = 1 LSB
+        scale = 1 / 100.0 if unit_sel.acceleration == BNO055.UnitSelection.ACC_MPS2 else 1 / 1.0
+        return (x * scale, y * scale, z * scale)
