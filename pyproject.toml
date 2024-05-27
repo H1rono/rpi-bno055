@@ -12,6 +12,7 @@ dependencies = [
 
 [project.scripts]
 bno055-begin = "rpi_bno055:scripts.begin"
+bno055-status = "rpi_bno055:scripts.system_status"
 
 [project.optional-dependencies]
 dev = [
