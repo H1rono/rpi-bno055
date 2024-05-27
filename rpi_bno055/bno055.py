@@ -31,6 +31,18 @@ class BNO055:
     def read_power_mode(self) -> PowerMode:
         return PowerMode(self.read_byte(BNO055.regaddrs0.PWR_MODE))
 
+    # section 3.8, 4.3.55
+    # (Accelerometer, Magnetometer, Gyroscope, Microcontroller)
+    # True: pass
+    # False: fail
+    def selftest_result(self) -> tuple[bool, bool, bool, bool]:
+        buf = self.read_byte(BNO055.regaddrs0.ST_RESULT)
+        acc = bool((buf >> 0) & 0b1)
+        mag = bool((buf >> 1) & 0b1)
+        gyr = bool((buf >> 2) & 0b1)
+        mcu = bool((buf >> 3) & 0b1)
+        return (acc, mag, gyr, mcu)
+
     def begin(self) -> None:
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
         self.write_mode(BNO055.modes.CONFIG)

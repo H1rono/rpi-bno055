@@ -50,7 +50,8 @@ def system_status(
         case sys_err.SYSTEM_INIT_ERROR:
             error_str = "system initialization error"
         case sys_err.SELF_TEST_FAILED:
-            error_str = "selftest failed"
+            st_result = bno055.selftest_result()
+            error_str = f"selftest failed with result: {st_result}"
         case sys_err.REGISTER_VALUE_OUT_OF_RANGE:
             error_str = "register value out of range"
         case sys_err.REGISTER_ADDRESS_OUT_OF_RANGE:
