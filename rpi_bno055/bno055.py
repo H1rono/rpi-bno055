@@ -1,10 +1,10 @@
 import smbus2
 
-from . import Mode, RegisterAddress, SysErrCode, SysStatusCode
+from . import Mode, RegisterAddress, SysErrCode, SysStatusCode, PowerMode
 
 
 class BNO055:
-    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, SysTriggerFlag
+    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, SysTriggerFlag, power_modes
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
@@ -24,6 +24,12 @@ class BNO055:
 
     def read_mode(self) -> Mode:
         return Mode(self.read_byte(BNO055.regaddrs0.OPR_MODE))
+
+    def write_power_mode(self, mode: PowerMode) -> None:
+        self.write_byte(BNO055.regaddrs0.PWR_MODE, mode)
+
+    def read_power_mode(self) -> PowerMode:
+        return PowerMode(self.read_byte(BNO055.regaddrs0.PWR_MODE))
 
     def begin(self) -> None:
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
