@@ -10,6 +10,7 @@ from .sys_status_codes import SysStatusCode
 class BNO055:
     from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, power_modes
     from .constants import SysTriggerFlag
+    from .unit_sel import UnitSelection
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
@@ -47,6 +48,17 @@ class BNO055:
         gyr = bool((buf >> 2) & 0b1)
         mcu = bool((buf >> 3) & 0b1)
         return (acc, mag, gyr, mcu)
+
+    def read_unit_selection(self) -> UnitSelection:
+        buf = self.read_byte(BNO055.regaddrs0.UNIT_SEL)
+        return BNO055.UnitSelection.from_value(buf)
+
+    def write_unit_selection(self, unit_sel: UnitSelection) -> None:
+        self.write_byte(BNO055.regaddrs0.UNIT_SEL, unit_sel.value)
+
+    def update_unit_selection(self, val: UnitSelection.UnitsType) -> None:
+        unit_sel = self.read_unit_selection()
+        self.write_unit_selection(unit_sel.set(val))
 
     def begin(self) -> None:
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
