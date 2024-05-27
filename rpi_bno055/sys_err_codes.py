@@ -1,7 +1,10 @@
 # SYS_ERR values
 # section 4.3.59
 
-from . import SysErrCode
+from typing import NewType
+
+
+SysErrCode = NewType("SysErrCode", int)
 
 NO_ERROR = SysErrCode(0x00)
 PERIPHERAL_INIT_ERROR = SysErrCode(0x01)

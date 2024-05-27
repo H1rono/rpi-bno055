@@ -1,6 +1,8 @@
 # section 3.3
 
-from . import OperatingMode
+from typing import NewType
+
+OperatingMode = NewType("OperatingMode", int)
 
 # config mode (section 3.3.1)
 CONFIG = OperatingMode(0b0000_0000)

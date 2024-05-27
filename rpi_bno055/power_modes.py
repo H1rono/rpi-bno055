@@ -1,5 +1,7 @@
-from . import PowerMode
+from typing import NewType
 
+
+PowerMode = NewType("PowerMode", int)
 
 # section 3.2
 NORMAL = PowerMode(0b0000_0000)

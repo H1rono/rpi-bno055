@@ -1,7 +1,10 @@
 # register addresses of Page 0
 # section 4.2.1, Table 4-2
 
-from . import RegisterAddress
+from typing import NewType
+
+
+RegisterAddress = NewType("RegisterAddress", int)
 
 MAG_RADIUS_MSB = RegisterAddress(0x6A)
 MAG_RADIUS_LSB = RegisterAddress(0x69)

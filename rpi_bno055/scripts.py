@@ -1,8 +1,9 @@
 import smbus2
 
-from . import SysErrCode, constants, sys_err_codes as sys_err, sys_status_codes as sys_status
+from . import constants, sys_err_codes as sys_err, sys_status_codes as sys_status
 from .constants import SysTriggerFlag
 from .bno055 import BNO055
+from .sys_err_codes import SysErrCode
 
 
 # bno055_addr: 0x28 or 0x29

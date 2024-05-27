@@ -1,10 +1,15 @@
 import smbus2
 
-from . import OperatingMode, RegisterAddress, SysErrCode, SysStatusCode, PowerMode
+from .modes import OperatingMode
+from .power_modes import PowerMode
+from .regaddrs0 import RegisterAddress
+from .sys_err_codes import SysErrCode
+from .sys_status_codes import SysStatusCode
 
 
 class BNO055:
-    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, SysTriggerFlag, power_modes
+    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, power_modes
+    from .constants import SysTriggerFlag
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)

@@ -1,4 +1,7 @@
-from . import SysStatusCode
+from typing import NewType
+
+
+SysStatusCode = NewType("SysStatusCode", int)
 
 # SYS_STATUS values
 # section 4.3.58
