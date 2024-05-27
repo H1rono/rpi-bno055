@@ -1,6 +1,5 @@
 from typing import NewType
 
-
 SysStatusCode = NewType("SysStatusCode", int)
 
 # SYS_STATUS values

@@ -1,6 +1,5 @@
 from enum import IntFlag as _IntFlag
 
-
 DEFAULT_ADDRESS = 0x28
 ALT_ADDRESS = 0x29
 DEFAULT_I2C_PORT = "/dev/i2c-1"

@@ -1,6 +1,5 @@
 from typing import NewType
 
-
 PowerMode = NewType("PowerMode", int)
 
 # section 3.2

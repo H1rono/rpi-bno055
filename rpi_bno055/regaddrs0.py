@@ -3,7 +3,6 @@
 
 from typing import NewType
 
-
 RegisterAddress = NewType("RegisterAddress", int)
 
 MAG_RADIUS_MSB = RegisterAddress(0x6A)

@@ -8,7 +8,7 @@ from .sys_status_codes import SysStatusCode
 
 
 class BNO055:
-    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, power_modes
+    from . import constants, modes, power_modes, regaddrs0, sys_err_codes, sys_status_codes
     from .constants import SysTriggerFlag
     from .unit_sel import UnitSelection
 

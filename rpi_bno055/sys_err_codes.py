@@ -3,7 +3,6 @@
 
 from typing import NewType
 
-
 SysErrCode = NewType("SysErrCode", int)
 
 NO_ERROR = SysErrCode(0x00)

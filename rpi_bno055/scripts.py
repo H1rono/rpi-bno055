@@ -3,8 +3,8 @@ from time import sleep
 import smbus2
 
 from . import constants, sys_err_codes as sys_err, sys_status_codes as sys_status
-from .constants import SysTriggerFlag
 from .bno055 import BNO055
+from .constants import SysTriggerFlag
 from .sys_err_codes import SysErrCode
 
 
@@ -71,7 +71,9 @@ def system_status(
     print(f"bno055 is in error: {error_str}")
 
 
-def calibration_check(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
+def calibration_check(
+    bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT
+) -> None:
     bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
     bno055.begin()
     print("connected to bno055. resetting system...")
