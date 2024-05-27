@@ -115,6 +115,8 @@ class BNO055:
         return self.read_byte(BNO055.regaddrs0.TEMP)
 
     # (mag, acc, gyr, sys)
+    # 0 to 3; 3 indicates fully calibrated
+    # section 3.10, 4.3.54
     def read_calibration_status(self) -> tuple[int, int, int, int]:
         buf = self.read_byte(BNO055.regaddrs0.CALIB_STAT)
         mag = (buf >> 0) & 0b11
