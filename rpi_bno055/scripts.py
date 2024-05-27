@@ -37,6 +37,7 @@ def system_status(
             status_str = "no-fusion algorithm running"
     if error is None:
         print(f"bno055 status: {status_str}; no-error")
+        return
     error_str = "unknown"
     match error:
         case sys_err.NO_ERROR:
