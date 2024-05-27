@@ -1,6 +1,6 @@
 import smbus2
 
-from . import Mode, RegisterAddress, SysErrCode, SysStatusCode, PowerMode
+from . import OperatingMode, RegisterAddress, SysErrCode, SysStatusCode, PowerMode
 
 
 class BNO055:
@@ -19,11 +19,11 @@ class BNO055:
     def read_block(self, register: RegisterAddress, length: int) -> list[int]:
         return self._i2c.read_i2c_block_data(self._address, register, length)
 
-    def write_mode(self, mode: Mode) -> None:
+    def write_mode(self, mode: OperatingMode) -> None:
         self.write_byte(BNO055.regaddrs0.OPR_MODE, mode)
 
-    def read_mode(self) -> Mode:
-        return Mode(self.read_byte(BNO055.regaddrs0.OPR_MODE))
+    def read_mode(self) -> OperatingMode:
+        return OperatingMode(self.read_byte(BNO055.regaddrs0.OPR_MODE))
 
     def write_power_mode(self, mode: PowerMode) -> None:
         self.write_byte(BNO055.regaddrs0.PWR_MODE, mode)

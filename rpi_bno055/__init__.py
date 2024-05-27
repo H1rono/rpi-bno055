@@ -4,7 +4,7 @@ from .constants import SysTriggerFlag
 
 
 RegisterAddress = NewType("RegisterAddress", int)
-Mode = NewType("Mode", int)
+OperatingMode = NewType("OperatingMode", int)
 SysStatusCode = NewType("SysStatusCode", int)
 SysErrCode = NewType("SysErrCode", int)
 PowerMode = NewType("PowerMode", int)
