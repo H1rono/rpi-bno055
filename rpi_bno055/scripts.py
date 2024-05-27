@@ -1,3 +1,5 @@
+from time import sleep
+
 import smbus2
 
 from . import constants, sys_err_codes as sys_err, sys_status_codes as sys_status
@@ -6,7 +8,6 @@ from .bno055 import BNO055
 from .sys_err_codes import SysErrCode
 
 
-# bno055_addr: 0x28 or 0x29
 def begin(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
     bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
     bno055.begin()
@@ -68,6 +69,21 @@ def system_status(
         case sys_err.SENSOR_CONFIGURATION_ERROR:
             error_str = "sensor configuration error"
     print(f"bno055 is in error: {error_str}")
+
+
+def calibration_check(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
+    bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
+    bno055.begin()
+    print("connected to bno055. resetting system...")
+    bno055.system_trigger(BNO055.SysTriggerFlag.RST_SYS)
+    print("done. watching calibration status...")
+    while True:
+        mag, acc, gyr, sys = bno055.read_calibration_status()
+        print(f"{mag=}, {acc=}, {gyr=}, {sys=}")
+        if mag == acc == gyr == sys == 3:
+            print("bno055 is fully calibrated!")
+            break
+        sleep(0.1)
 
 
 if __name__ == "__main__":
