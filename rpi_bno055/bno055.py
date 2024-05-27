@@ -1,10 +1,10 @@
 import smbus2
 
-from . import Mode, RegisterAddress
+from . import Mode, RegisterAddress, SysErrCode, SysStatusCode
 
 
 class BNO055:
-    from . import constants, modes, regaddrs0
+    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
@@ -105,11 +105,11 @@ class BNO055:
         sys = (buf >> 6) & 0b11
         return (mag, acc, gyr, sys)
 
-    def read_system_status_code(self) -> int:
-        return self.read_byte(BNO055.regaddrs0.SYS_STATUS)
+    def read_system_status_code(self) -> SysStatusCode:
+        return SysStatusCode(self.read_byte(BNO055.regaddrs0.SYS_STATUS))
 
-    def read_system_error_code(self) -> int:
-        return self.read_byte(BNO055.regaddrs0.SYS_ERR)
+    def read_system_error_code(self) -> SysErrCode:
+        return SysErrCode(self.read_byte(BNO055.regaddrs0.SYS_ERR))
 
     # (ACC_OFFSET_X, ACC_OFFSET_Y, ACC_OFFSET_Z)
     def read_raw_acc_offset(self) -> tuple[int, int, int]:
