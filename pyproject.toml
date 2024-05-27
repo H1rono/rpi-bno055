@@ -10,6 +10,9 @@ dependencies = [
     "smbus2 >= 0.4.0"
 ]
 
+[project.scripts]
+begin-test = "rpi_bno055:bno055.main"
+
 [project.optional-dependencies]
 dev = [
     "mypy",
