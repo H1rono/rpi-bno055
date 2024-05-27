@@ -10,7 +10,7 @@ class OrientationUnits(_enum.Enum):
 
     @classmethod
     def default(cls) -> Self:
-        return cls.WINDOWS # type: ignore
+        return cls.WINDOWS  # type: ignore
 
 
 # section 3.6.1
@@ -20,7 +20,7 @@ class TemperatureUnits(_enum.Enum):
 
     @classmethod
     def default(cls) -> Self:
-        return cls.CELSIUS # type: ignore
+        return cls.CELSIUS  # type: ignore
 
 
 # section 3.6.1
@@ -30,7 +30,7 @@ class EulerUnits(_enum.Enum):
 
     @classmethod
     def default(cls) -> Self:
-        return cls.DEGREES # type: ignore
+        return cls.DEGREES  # type: ignore
 
 
 # section 3.6.1
@@ -42,7 +42,7 @@ class GyroUnits(_enum.Enum):
 
     @classmethod
     def default(cls) -> Self:
-        return cls.DEG_PER_SEC # type: ignore
+        return cls.DEG_PER_SEC  # type: ignore
 
 
 # section 3.6.1
@@ -53,7 +53,7 @@ class AccUnits(_enum.Enum):
 
     @classmethod
     def default(cls) -> Self:
-        return cls.METER_PER_S2 # type: ignore
+        return cls.METER_PER_S2  # type: ignore
 
 
 # section 3.6.1, 3.6.2, 4.3.60
@@ -177,4 +177,4 @@ class UnitSelection:
         eul = EulerUnits((value >> 2) & 1)
         gyr = GyroUnits((value >> 1) & 1)
         acc = AccUnits((value >> 0) & 1)
-        return UnitSelection().set(ori).set(temp).set(eul).set(gyr).set(acc) # type: ignore
+        return UnitSelection().set(ori).set(temp).set(eul).set(gyr).set(acc)  # type: ignore
