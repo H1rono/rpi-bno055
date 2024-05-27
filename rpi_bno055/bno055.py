@@ -4,7 +4,7 @@ from . import Mode, RegisterAddress, SysErrCode, SysStatusCode
 
 
 class BNO055:
-    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes
+    from . import constants, modes, regaddrs0, sys_err_codes, sys_status_codes, SysTriggerFlag
 
     def __init__(self, bno055_address: int = constants.DEFAULT_ADDRESS, bus: smbus2.SMBus | None = None):
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
@@ -148,3 +148,19 @@ class BNO055:
         lsb = buf[0]
         msb = buf[1]
         return (lsb << 0) | (msb << 8)
+
+    def system_trigger(self, trigger: SysTriggerFlag) -> None:
+        from time import sleep
+        self.write_byte(BNO055.regaddrs0.SYS_TRIGGER, trigger)
+        # ensure triggering
+        while True:
+            try:
+                id =  self.read_byte(BNO055.regaddrs0.CHIP_ID)
+                if id == BNO055.constants.BNO055_CHIP_ID:
+                    break
+            except OSError:
+                pass
+            # for debug
+            # print("BNO055.system_trigger: waiting...")
+            sleep(0.05)
+        self.write_byte(BNO055.regaddrs0.SYS_TRIGGER, BNO055.SysTriggerFlag.NO_TRIGGER)

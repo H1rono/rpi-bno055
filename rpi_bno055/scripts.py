@@ -1,6 +1,7 @@
 import smbus2
 
 from . import SysErrCode, constants, sys_err_codes as sys_err, sys_status_codes as sys_status
+from .constants import SysTriggerFlag
 from .bno055 import BNO055
 
 
@@ -8,7 +9,9 @@ from .bno055 import BNO055
 def begin(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
     bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
     bno055.begin()
-    print("begin success!")
+    print("begin success! triggering system reset...")
+    bno055.system_trigger(SysTriggerFlag.RST_SYS)
+    print("done!")
 
 
 def system_status(
