@@ -148,14 +148,3 @@ class BNO055:
         lsb = buf[0]
         msb = buf[1]
         return (lsb << 0) | (msb << 8)
-
-
-# bno055_addr: 0x28 or 0x29
-def main(bno055_addr: int = 0x28, bus_port: str | int = "/dev/i2c-1") -> None:
-    bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
-    bno055.begin()
-    print("begin success!")
-
-
-if __name__ == "__main__":
-    main()

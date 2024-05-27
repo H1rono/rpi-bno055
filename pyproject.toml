@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-begin-test = "rpi_bno055:bno055.main"
+bno055-begin = "rpi_bno055:scripts.begin"
 
 [project.optional-dependencies]
 dev = [
