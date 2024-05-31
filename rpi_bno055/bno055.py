@@ -86,7 +86,7 @@ class BNO055:
     # footnote 5, 6 at page 52
     def read_sw_revision_id(self) -> tuple[int, int]:
         buf = self.read_block(BNO055.regaddrs0.SW_REV_ID_LSB, 2)
-        return (buf[0], buf[1])
+        return (buf[1], buf[0])
 
     # (ACC_DATA_X, ACC_DATA_Y, ACC_DATA_Z)
     # section 3.6.5.1, table 3-25
