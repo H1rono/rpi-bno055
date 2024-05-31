@@ -11,11 +11,11 @@ dependencies = [
 ]
 
 [project.scripts]
-bno055-begin = "rpi_bno055:scripts.begin"
-bno055-status = "rpi_bno055:scripts.system_status"
-bno055-calib = "rpi_bno055:scripts.calibration_check"
-bno055-acconly = "rpi_bno055:scripts.acconly"
-bno055-imu = "rpi_bno055:scripts.imu"
+bno055-begin = "rpi_bno055.scripts:begin"
+bno055-status = "rpi_bno055.scripts:system_status"
+bno055-calib = "rpi_bno055.scripts:calibration_check"
+bno055-acconly = "rpi_bno055.scripts:acconly"
+bno055-imu = "rpi_bno055.scripts:imu"
 
 [project.optional-dependencies]
 dev = [
