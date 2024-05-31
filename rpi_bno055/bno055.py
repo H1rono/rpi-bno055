@@ -22,24 +22,31 @@ class BNO055:
         self._i2c = bus or smbus2.SMBus(self.__class__.constants.DEFAULT_I2C_PORT)
         self._address = bno055_address
 
+    # section 4.6, figure 6
     def write_byte(self, register: RegisterAddress, value: int) -> None:
         self._i2c.write_byte_data(self._address, register, value)
 
+    # section 4.6, figure 7
     def read_byte(self, register: RegisterAddress) -> int:
         return self._i2c.read_byte_data(self._address, register)
 
+    # section 4.6, figure 7
     def read_block(self, register: RegisterAddress, length: int) -> list[int]:
         return self._i2c.read_i2c_block_data(self._address, register, length)
 
+    # section 3.3, table 3-5
     def write_mode(self, mode: OperatingMode) -> None:
         self.write_byte(BNO055.regaddrs0.OPR_MODE, mode)
 
+    # section 3.3, table 3-5
     def read_mode(self) -> OperatingMode:
         return OperatingMode(self.read_byte(BNO055.regaddrs0.OPR_MODE))
 
+    # section 3.2, table 3-1
     def write_power_mode(self, mode: PowerMode) -> None:
         self.write_byte(BNO055.regaddrs0.PWR_MODE, mode)
 
+    # section 3.2, table 3-1
     def read_power_mode(self) -> PowerMode:
         return PowerMode(self.read_byte(BNO055.regaddrs0.PWR_MODE))
 
@@ -55,13 +62,16 @@ class BNO055:
         mcu = bool((buf >> 3) & 0b1)
         return (acc, mag, gyr, mcu)
 
+    # section 3.6.1
     def read_unit_selection(self) -> UnitSelection:
         buf = self.read_byte(BNO055.regaddrs0.UNIT_SEL)
         return BNO055.UnitSelection.from_value(buf)
 
+    # section 3.6.1
     def write_unit_selection(self, unit_sel: UnitSelection) -> None:
         self.write_byte(BNO055.regaddrs0.UNIT_SEL, unit_sel.value)
 
+    # section 3.6.1
     def update_unit_selection(self, val: UnitSelection.UnitsType) -> None:
         unit_sel = self.read_unit_selection()
         self.write_unit_selection(unit_sel.set(val))
@@ -72,6 +82,8 @@ class BNO055:
         assert self.read_byte(BNO055.regaddrs0.CHIP_ID) == 0xA0
 
     # (SW_REV_ID_MSB, SW_REV_ID_LSB)
+    # section 4.2.1, 4.3.5, table 4-2
+    # footnote 5, 6 at page 52
     def read_sw_revision_id(self) -> tuple[int, int]:
         buf = self.read_block(BNO055.regaddrs0.SW_REV_ID_LSB, 2)
         return (buf[0], buf[1])
@@ -142,9 +154,11 @@ class BNO055:
         sys = (buf >> 6) & 0b11
         return (mag, acc, gyr, sys)
 
+    # section 4.3.58
     def read_system_status_code(self) -> SysStatusCode:
         return SysStatusCode(self.read_byte(BNO055.regaddrs0.SYS_STATUS))
 
+    # section 4.3.59
     def read_system_error_code(self) -> SysErrCode:
         return SysErrCode(self.read_byte(BNO055.regaddrs0.SYS_ERR))
 
