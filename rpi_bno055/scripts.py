@@ -108,5 +108,35 @@ def acconly(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = 
         sleep(1)
 
 
+def imu(bno055_addr: int = constants.DEFAULT_ADDRESS, bus_port: str | int = constants.DEFAULT_I2C_PORT) -> None:
+    # In the IMU mode the relative orientation of the BNO055 in space is calculated
+    # from the accelerometer and gyroscope data. The calculation is fast (i.e. high output data rate).
+    bno055 = BNO055(bno055_addr, smbus2.SMBus(bus_port))
+    bno055.begin()
+    bno055.system_trigger(BNO055.SysTriggerFlag.RST_SYS)
+    status = bno055.read_system_status_code()
+    if status == bno055.sys_status_codes.SYSTEM_ERROR:
+        err = bno055.read_system_error_code()
+        print(f"bno055 is in system error with code: {err}")
+        return
+    # accelerometer: m/s^2
+    bno055.update_unit_selection(BNO055.UnitSelection.ACC_MPS2)
+    # gyroscope: rad/s
+    bno055.update_unit_selection(BNO055.UnitSelection.GYR_RPS)
+    # euler: radians
+    bno055.update_unit_selection(BNO055.UnitSelection.EUL_RADIANS)
+    bno055.write_mode(BNO055.modes.IMU)
+    while True:
+        try:
+            accel = bno055.read_accelerometer()
+            linear_accel = bno055.read_linear_accel()
+            gravity = bno055.read_gravity()
+            euler = bno055.read_euler()
+            print(f"IMU data:\n{accel=} [m/s^2]\n{linear_accel=} [m/s^2]\n{gravity=} [m/s^2]\n{euler=} [rad]\n", end="")
+        except OSError:
+            print("waiting bno055 getting ready...")
+        sleep(1)
+
+
 if __name__ == "__main__":
     begin()
