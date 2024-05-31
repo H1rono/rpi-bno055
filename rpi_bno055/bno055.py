@@ -126,8 +126,10 @@ class BNO055:
         x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
-    def read_temperature(self) -> int:
-        return self.read_byte(BNO055.regaddrs0.TEMP)
+    # TEMP
+    # section 3.6.5.8, table 3-36
+    def read_raw_temperature_data(self) -> int:
+        return int.from_bytes([self.read_byte(BNO055.regaddrs0.TEMP)], byteorder="big", signed=True)
 
     # (mag, acc, gyr, sys)
     # 0 to 3; 3 indicates fully calibrated
