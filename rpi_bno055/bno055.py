@@ -1,3 +1,5 @@
+from collections.abc import Sequence
+
 import smbus2
 
 from .modes import OperatingMode
@@ -5,6 +7,10 @@ from .power_modes import PowerMode
 from .regaddrs0 import RegisterAddress
 from .sys_err_codes import SysErrCode
 from .sys_status_codes import SysStatusCode
+
+
+def _bytes_to_i16s(seq: Sequence[int], length: int) -> list[int]:
+    return [int.from_bytes(seq[i : i + 2], byteorder="little", signed=True) for i in range(0, length * 2, 2)]
 
 
 class BNO055:
@@ -71,61 +77,53 @@ class BNO055:
         return (buf[0], buf[1])
 
     # (ACC_DATA_X, ACC_DATA_Y, ACC_DATA_Z)
+    # section 3.6.5.1, table 3-25
     def read_raw_acc_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.ACC_DATA_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (MAG_DATA_X, MAG_DATA_Y, MAG_DATA_Z)
+    # section 3.6.5.2, table 3-26
     def read_raw_mag_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.MAG_DATA_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (GYR_DATA_X, GYR_DATA_Y, GYR_DATA_Z)
+    # section 3.6.5.3, table 3-27
     def read_raw_gyro_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.GYR_DATA_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (EUL_HEADING, EUL_ROLL, EUL_PITCH)
+    # section 3.6.5.4, table 3-28
     def read_raw_euler_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.EUL_HEADING_LSB, 6)
-        heading = (buf[0] << 0) | (buf[1] << 8)
-        roll = (buf[2] << 0) | (buf[3] << 8)
-        pitch = (buf[4] << 0) | (buf[5] << 8)
+        heading, roll, pitch = _bytes_to_i16s(buf, 3)
         return (heading, roll, pitch)
 
     # (QUA_DATA_W, QUA_DATA_X, QUA_DATA_Y, QUA_DATA_Z)
+    # section 3.6.5.5, table 3-30
     def read_raw_quaternion_data(self) -> tuple[int, int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.QUA_DATA_W_LSB, 6)
-        w = (buf[0] << 0) | (buf[1] << 8)
-        x = (buf[2] << 0) | (buf[3] << 8)
-        y = (buf[4] << 0) | (buf[5] << 8)
-        z = (buf[6] << 0) | (buf[7] << 8)
+        w, x, y, z = _bytes_to_i16s(buf, 4)
         return (w, x, y, z)
 
     # lia: linear acceleration
     # (LIA_DATA_X, LIA_DATA_Y, LIA_DATA_Z)
+    # section 3.6.5.6, table 3-32
     def read_raw_lia_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.LIA_DATA_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (GRV_DATA_X, GRV_DATA_Y, GRV_DATA_Z)
+    # section 3.6.5.7, table 3-34
     def read_raw_gravity_data(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.GRV_DATA_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     def read_temperature(self) -> int:
@@ -149,42 +147,38 @@ class BNO055:
         return SysErrCode(self.read_byte(BNO055.regaddrs0.SYS_ERR))
 
     # (ACC_OFFSET_X, ACC_OFFSET_Y, ACC_OFFSET_Z)
+    # section 3.6.4.1, table 3-15
     def read_raw_acc_offset(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.ACC_OFFSET_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (MAG_OFFSET_X, MAG_OFFSET_Y, MAG_OFFSET_Z)
+    # section 3.6.4.2, table 3-18
     def read_raw_mag_offset(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.MAG_OFFSET_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # (GYR_OFFSET_X, GYR_OFFSET_Y, GYR_OFFSET_Z)
+    # section 3.6.4.3, table 3-20
     def read_raw_gyr_offset(self) -> tuple[int, int, int]:
         buf = self.read_block(BNO055.regaddrs0.GYR_OFFSET_X_LSB, 6)
-        x = (buf[0] << 0) | (buf[1] << 8)
-        y = (buf[2] << 0) | (buf[3] << 8)
-        z = (buf[4] << 0) | (buf[5] << 8)
+        x, y, z = _bytes_to_i16s(buf, 3)
         return (x, y, z)
 
     # ACC_RADIUS
+    # section 3.6.4.4, table 3-24
     def read_raw_acc_radius(self) -> int:
         buf = self.read_block(BNO055.regaddrs0.ACC_RADIUS_LSB, 2)
-        lsb = buf[0]
-        msb = buf[1]
-        return (lsb << 0) | (msb << 8)
+        radius, *_ = _bytes_to_i16s(buf, 1)
+        return radius
 
     # MAG_RADIUS
     def read_raw_mag_radius(self) -> int:
         buf = self.read_block(BNO055.regaddrs0.MAG_RADIUS_LSB, 2)
-        lsb = buf[0]
-        msb = buf[1]
-        return (lsb << 0) | (msb << 8)
+        radius, *_ = _bytes_to_i16s(buf, 1)
+        return radius
 
     def system_trigger(self, trigger: SysTriggerFlag) -> None:
         from time import sleep
@@ -206,12 +200,25 @@ class BNO055:
     # (acc_x, acc_y, acc_z)
     # section 3.6.4.1, table 3-17
     def read_accelerometer(self) -> tuple[float, float, float]:
-        def parse_signed(v: int) -> int:
-            return int.from_bytes(bytes([(v >> 0) & 0xFF, (v >> 8) & 0xFF]), byteorder="little", signed=True)
-
-        raw_acc = self.read_raw_acc_data()
-        x, y, z = map(parse_signed, raw_acc)
+        x, y, z = self.read_raw_acc_data()
         unit_sel = self.read_unit_selection()
         # 1 m/s^2 = 100 LSB, 1 mg = 1 LSB
         scale = 1 / 100.0 if unit_sel.acceleration == BNO055.UnitSelection.ACC_MPS2 else 1 / 1.0
+        return (x * scale, y * scale, z * scale)
+
+    # (mag_x, mag_y, mag_z)
+    # section 3.6.4.2, table 3-19
+    def read_magnetometer(self) -> tuple[float, float, float]:
+        x, y, z = self.read_raw_mag_data()
+        # 1 μT = 16 LSB
+        scale = 1 / 16.0
+        return (x * scale, y * scale, z * scale)
+
+    # (gyro_x, gyro_y, gyro_z)
+    # section 3.6.4.3, table 3-22
+    def read_gyroscope(self) -> tuple[float, float, float]:
+        x, y, z = self.read_raw_gyro_data()
+        unit_sel = self.read_unit_selection()
+        # 1 dps = 16 LSB, 1 rps = 900 LSB
+        scale = 1 / 16.0 if unit_sel.gyroscope == BNO055.UnitSelection.GYR_DPS else 1 / 900.0
         return (x * scale, y * scale, z * scale)
