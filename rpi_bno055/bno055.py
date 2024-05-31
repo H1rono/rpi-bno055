@@ -224,3 +224,47 @@ class BNO055:
         # 1 dps = 16 LSB, 1 rps = 900 LSB
         scale = 1 / 16.0 if unit_sel.gyroscope == BNO055.UnitSelection.GYR_DPS else 1 / 900.0
         return (x * scale, y * scale, z * scale)
+
+    # (euler_heading, euler_roll, euler_pitch)
+    # section 3.6.5.4, table 3-29
+    def read_euler(self) -> tuple[float, float, float]:
+        heading, roll, pitch = self.read_raw_euler_data()
+        unit_sel = self.read_unit_selection()
+        # 1 degrees = 16 LSB, 1 radian = 900 LSB
+        scale = 1 / 16.0 if unit_sel.euler == BNO055.UnitSelection.EUL_DEGREES else 1 / 900.0
+        return (heading * scale, roll * scale, pitch * scale)
+
+    # (quat_w, quat_x, quat_y, quat_z)
+    # section 3.6.5.5, table 3-31
+    def read_quaternion(self) -> tuple[float, float, float, float]:
+        w, x, y, z = self.read_raw_quaternion_data()
+        # 1 [unit less] = 2^14 LSB
+        scale = 1 / 0b0100_0000_0000_0000
+        return (w * scale, x * scale, y * scale, z * scale)
+
+    # (lia_x, lia_y, lia_z)
+    # section 3.6.5.6, table 3-33
+    def read_linear_accel(self) -> tuple[float, float, float]:
+        x, y, z = self.read_raw_lia_data()
+        unit_sel = self.read_unit_selection()
+        # 1 m/s^2 = 100 LSB, 1 mg = 1 LSB
+        scale = 1 / 100.0 if unit_sel.acceleration == BNO055.UnitSelection.ACC_MPS2 else 1 / 1.0
+        return (x * scale, y * scale, z * scale)
+
+    # (grav_x, grav_y, grav_z)
+    # section 3.6.5.7, table 3-35
+    def read_gravity(self) -> tuple[float, float, float]:
+        x, y, z = self.read_raw_gravity_data()
+        unit_sel = self.read_unit_selection()
+        # 1 m/s^2 = 100 LSB, 1 mg = 1 LSB
+        scale = 1 / 100.0 if unit_sel.acceleration == BNO055.UnitSelection.ACC_MPS2 else 1 / 1.0
+        return (x * scale, y * scale, z * scale)
+
+    # temperature
+    # section 3.6.5.8, table 3-37
+    def read_temperature(self) -> float:
+        temp = self.read_raw_temperature_data()
+        unit_sel = self.read_unit_selection()
+        # 1 ℃ = 1 LSB, 2 F = 1 LSB
+        scale = 1 / 1.0 if unit_sel.temperature == BNO055.UnitSelection.TEMP_CELSIUS else 2 / 1.0
+        return temp * scale
