@@ -65,7 +65,7 @@ class BNO055:
     # section 3.6.1
     def read_unit_selection(self) -> UnitSelection:
         buf = self.read_byte(BNO055.regaddrs0.UNIT_SEL)
-        return BNO055.UnitSelection.from_value(buf)
+        return BNO055.UnitSelection.from_value(buf)  # type: ignore
 
     # section 3.6.1
     def write_unit_selection(self, unit_sel: UnitSelection) -> None:

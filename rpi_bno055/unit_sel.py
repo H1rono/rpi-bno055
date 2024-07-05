@@ -1,7 +1,5 @@
 import enum as _enum
 
-from typing_extensions import Self
-
 
 # section 3.6.2
 class OrientationUnits(_enum.Enum):
@@ -9,8 +7,8 @@ class OrientationUnits(_enum.Enum):
     ANDROID = 1
 
     @classmethod
-    def default(cls) -> Self:
-        return cls.WINDOWS  # type: ignore
+    def default(cls):  # type: ignore
+        return cls.WINDOWS
 
 
 # section 3.6.1
@@ -19,8 +17,8 @@ class TemperatureUnits(_enum.Enum):
     FAHRENHEIT = 1
 
     @classmethod
-    def default(cls) -> Self:
-        return cls.CELSIUS  # type: ignore
+    def default(cls):  # type: ignore
+        return cls.CELSIUS
 
 
 # section 3.6.1
@@ -29,8 +27,8 @@ class EulerUnits(_enum.Enum):
     RADIANS = 1
 
     @classmethod
-    def default(cls) -> Self:
-        return cls.DEGREES  # type: ignore
+    def default(cls):  # type: ignore
+        return cls.DEGREES
 
 
 # section 3.6.1
@@ -41,8 +39,8 @@ class GyroUnits(_enum.Enum):
     RAD_PER_SEC = 1
 
     @classmethod
-    def default(cls) -> Self:
-        return cls.DEG_PER_SEC  # type: ignore
+    def default(cls):  # type: ignore
+        return cls.DEG_PER_SEC
 
 
 # section 3.6.1
@@ -52,8 +50,8 @@ class AccUnits(_enum.Enum):
     MILLIGRAM = 1
 
     @classmethod
-    def default(cls) -> Self:
-        return cls.METER_PER_S2  # type: ignore
+    def default(cls):  # type: ignore
+        return cls.METER_PER_S2
 
 
 # section 3.6.1, 3.6.2, 4.3.60
@@ -106,7 +104,7 @@ class UnitSelection:
         acc: int = self._acceleration.value << 0
         return ori | temp | eul | gyr | acc
 
-    def set(self, v: UnitsType) -> Self:
+    def set(self, v: UnitsType):  # type: ignore
         match v:
             case UnitSelection.ORI_WINDOWS | UnitSelection.ORI_ANDROID:
                 self._orientation = v
@@ -140,38 +138,38 @@ class UnitSelection:
     def acceleration(self) -> AccUnits:
         return self._acceleration
 
-    def orientation_windows(self) -> Self:
+    def orientation_windows(self):  # type: ignore
         return self.set(UnitSelection.ORI_WINDOWS)
 
-    def orientation_android(self) -> Self:
+    def orientation_android(self):  # type: ignore
         return self.set(UnitSelection.ORI_ANDROID)
 
-    def temperature_celsius(self) -> Self:
+    def temperature_celsius(self):  # type: ignore
         return self.set(UnitSelection.TEMP_CELSIUS)
 
-    def temperature_fahrenheit(self) -> Self:
+    def temperature_fahrenheit(self):  # type: ignore
         return self.set(UnitSelection.TEMP_FAHRENHEIT)
 
-    def euler_degrees(self) -> Self:
+    def euler_degrees(self):  # type: ignore
         return self.set(UnitSelection.EUL_DEGREES)
 
-    def euler_radians(self) -> Self:
+    def euler_radians(self):  # type: ignore
         return self.set(UnitSelection.EUL_RADIANS)
 
-    def gyroscope_dps(self) -> Self:
+    def gyroscope_dps(self):  # type: ignore
         return self.set(UnitSelection.GYR_DPS)
 
-    def gyroscope_rps(self) -> Self:
+    def gyroscope_rps(self):  # type: ignore
         return self.set(UnitSelection.GYR_RPS)
 
-    def acceleration_mps2(self) -> Self:
+    def acceleration_mps2(self):  # type: ignore
         return self.set(UnitSelection.ACC_MPS2)
 
-    def acceleration_milligram(self) -> Self:
+    def acceleration_milligram(self):  # type: ignore
         return self.set(UnitSelection.ACC_MILLIGRAM)
 
     @classmethod
-    def from_value(cls, value: int) -> Self:
+    def from_value(cls, value: int):  # type: ignore
         ori = OrientationUnits((value >> 7) & 1)
         temp = TemperatureUnits((value >> 4) & 1)
         eul = EulerUnits((value >> 2) & 1)
